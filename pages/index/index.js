@@ -12,7 +12,7 @@ Page({
     swiperCurrent: 0,  
     selectCurrent:0,
     categories: [],
-    activeCategoryId: 0,
+    activeCategory: "",
     goods:[],
     scrollTop:0,
     loadingMoreHidden:true,
@@ -27,10 +27,10 @@ Page({
 
   tabClick: function (e) {
     this.setData({
-      activeCategoryId: e.currentTarget.id,
+      activeCategory: e.currentTarget.id,
       curPage: 1
     });
-    this.getGoodsList(this.data.activeCategoryId);
+    this.getGoodsList(this.data.activeCategory);
   },
   //事件处理函数
   swiperchange: function(e) {
@@ -90,7 +90,7 @@ Page({
         'token': wx.getStorageSync('token')
       },
       success: function(res) {
-        var categories = [{id:0, name:"全部"}];
+        var categories = [{ category_id: 0, category_name:"全部"}];
         if (res.data.status == 0) {
           for (var i = 0; i < res.data.items.length; i++) {
             categories.push(res.data.items[i]);
@@ -98,10 +98,10 @@ Page({
         }
         that.setData({
           categories:categories,
-          activeCategoryId:0,
+          activeCategory:"全部",
           curPage: 1
         });
-        that.getGoodsList(0);
+        that.getGoodsList("全部");
       }
     })
     that.getCoupons ();
@@ -113,25 +113,31 @@ Page({
       scrollTop: e.scrollTop
     })
    },
-  getGoodsList: function (categoryId, append) {
-    if (categoryId == 0) {
-      categoryId = "";
+  getGoodsList: function (category, append) {
+    if (category == 0) {
+      category = "";
     }
     var that = this;
     wx.showLoading({
       "mask":true
     })
     wx.request({
-      url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/shop/goods/list',
+      url: app.globalData.domain +'api/commodity/search',
+      method: "POST",
       data: {
-        categoryId: categoryId,
-        nameLike: that.data.searchInput,
+        category: category,
+        keyword: that.data.searchInput,
         page: this.data.curPage,
         pageSize: this.data.pageSize
       },
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
       success: function(res) {
-        wx.hideLoading()        
-        if (res.data.code == 404 || res.data.code == 700){
+        wx.hideLoading()
+        //console.log(res.data)        
+        if (res.data.status == -1 || res.data.items.length == 0){
           let newData = { loadingMoreHidden: false }
           if (!append) {
             newData.goods = []
@@ -142,9 +148,9 @@ Page({
         let goods = [];
         if (append) {
           goods = that.data.goods
-        }        
-        for(var i=0;i<res.data.data.length;i++){
-          goods.push(res.data.data[i]);
+        }
+        for(var i=0;i<res.data.items.length;i++){
+          goods.push(res.data.items[i]);
         }
         that.setData({
           loadingMoreHidden: true,
@@ -263,18 +269,18 @@ Page({
     this.setData({
       curPage: 1
     });
-    this.getGoodsList(this.data.activeCategoryId);
+    this.getGoodsList(this.data.activeCategory);
   },
   onReachBottom: function () {
     this.setData({
       curPage: this.data.curPage+1
     });
-    this.getGoodsList(this.data.activeCategoryId, true)
+    this.getGoodsList(this.data.activeCategory, true)
   },
   onPullDownRefresh: function(){
     this.setData({
       curPage: 1
     });
-    this.getGoodsList(this.data.activeCategoryId)
+    this.getGoodsList(this.data.activeCategory)
   }
 })

@@ -38,14 +38,34 @@ Page({
       this.onShow();
   },
   onShow: function(){
-      var shopList = [];
+      var that = this;
       // 获取购物车数据
-      var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
-      if (shopCarInfoMem && shopCarInfoMem.shopList) {
-        shopList = shopCarInfoMem.shopList
-      }
-      this.data.goodsList.list = shopList;
-      this.setGoodsList(this.getSaveHide(),this.totalPrice(),this.allSelect(),this.noSelect(),shopList);
+      wx.request({
+        url: app.globalData.domain + 'api/cartList',
+        data: {},
+        method: "GET",
+        header: {
+          'content-type': 'application/json', // 默认值
+          'token': wx.getStorageSync('token')
+        },
+        success: function (res) {
+          var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
+          console.log(shopCarInfoMem)
+          if(res.data.status != 0){
+            wx.showModal({
+              title: '提示',
+              content: '获取购物车失败！',
+              showCancel: false
+            })
+            return;
+          }
+          var shopList = res.data.items;
+          console.log(shopList)
+          that.data.goodsList.list = shopList;
+          that.setGoodsList(that.getSaveHide(), that.totalPrice(), that.allSelect(), that.noSelect(), shopList);
+        }
+      })
+      
   },
   toIndexPage:function(){
       wx.switchTab({
@@ -121,8 +141,8 @@ Page({
       for(var i = 0 ; i < list.length ; i++){
           var curItem = list[i];
           if(curItem.active){
-            total+= parseFloat(curItem.price)*curItem.number;
-            totalScoreToPay += curItem.score * curItem.number;
+            total+= parseFloat(curItem.price)*curItem.num;
+            totalScoreToPay += curItem.score * curItem.num;
           }
       }
       this.data.goodsList.totalScoreToPay = totalScoreToPay;
@@ -180,6 +200,8 @@ Page({
         key:"shopCarInfo",
         data:shopCarInfo
       })
+
+      
    },
    bindAllSelect:function(){
       var currentAllSelect = this.data.goodsList.allSelect;
@@ -199,7 +221,7 @@ Page({
       this.setGoodsList(this.getSaveHide(),this.totalPrice(),!currentAllSelect,this.noSelect(),list);
    },
    jiaBtnTap:function(e){
-	var that = this
+	  var that = this
     var index = e.currentTarget.dataset.index;
     var list = that.data.goodsList.list;
     if(index!=="" && index != null){
@@ -207,15 +229,17 @@ Page({
       var carShopBean = list[parseInt(index)];
       var carShopBeanStores = 0;
       wx.request({
-        url: 'https://api.it120.cc/' + app.globalData.subDomain + '/shop/goods/detail',
+        url: app.globalData.domain + 'api/commodity/price/' + list[parseInt(index)].commodity_id,
+        method: "POST",
         data: {
-          id: carShopBean.goodsId
+          commodity_id: list[parseInt(index)].commodity_id,
+          propertyChildNames: list[parseInt(index)].specifition_name
         },
         success: function (res) {
-          carShopBeanStores = res.data.data.basicInfo.stores;
-          console.log(' currnet good id and stores is :',carShopBean.goodsId, carShopBeanStores)
-          if (list[parseInt(index)].number < carShopBeanStores) {
-            list[parseInt(index)].number++;
+          carShopBeanStores = res.data.items.num;
+          if (list[parseInt(index)].num < carShopBeanStores) {
+            //console.log(' currnet good id and stores is :', carShopBean.commodity_id, carShopBeanStores)
+            list[parseInt(index)].num++;
             that.setGoodsList(that.getSaveHide(), that.totalPrice(), that.allSelect(), that.noSelect(), list);
           }
           that.setData({
@@ -229,8 +253,8 @@ Page({
     var index = e.currentTarget.dataset.index;
     var list = this.data.goodsList.list;
     if(index!=="" && index != null){
-      if(list[parseInt(index)].number>1){
-        list[parseInt(index)].number-- ;
+      if(list[parseInt(index)].num>1){
+        list[parseInt(index)].num-- ;
         this.setGoodsList(this.getSaveHide(),this.totalPrice(),this.allSelect(),this.noSelect(),list);
       }
     }
@@ -266,9 +290,13 @@ Page({
       }
       */
      // above codes that remove elements in a for statement may change the length of list dynamically
+     var arr = new Array();
+     var i = 0;
      list = list.filter(function(curGoods) {
+       arr[i++] = curGoods.cart_id;
         return !curGoods.active;
      });
+     console.log("========== " + arr.join(","))
      this.setGoodsList(this.getSaveHide(),this.totalPrice(),this.allSelect(),this.noSelect(),list);
     },
     toPayOrder:function(){

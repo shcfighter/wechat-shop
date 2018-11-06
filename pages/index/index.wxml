@@ -19,7 +19,7 @@
     <view class="type-container">
         <scroll-view class="type-navbar" scroll-x="true">
             <view class="type-box" wx:for-items="{{categories}}" wx:key="id">
-                <view id="{{item.category_id}}" class="type-navbar-item {{activeCategoryId == item.category_id ? 'type-item-on' : ''}}" bindtap="tabClick">
+                <view id="{{item.category_name}}" class="type-navbar-item {{activeCategory == item.category_name ? 'type-item-on' : ''}}" bindtap="tabClick">
                     {{item.category_name}}
                 </view>
             </view>
@@ -56,14 +56,14 @@
         </scroll-view>
     </view>
     <view class="goods-container">
-        <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}" bindtap="toDetailsTap" data-id="{{item.id}}">
+        <view class="goods-box" wx:for-items="{{goods}}" wx:key="{{index}}" bindtap="toDetailsTap" data-id="{{item.commodity_id}}">
            <view class="img-box">
-              <image src="{{item.pic}}_m" class="image" mode="aspectFill" lazy-load="true"/>
+              <image src="{{item.image_url[0]}}_m" class="image" mode="aspectFill" lazy-load="true"/>
            </view>
-           <view class="goods-title">{{item.name}}</view>
+           <view class="goods-title">{{item.commodity_name}}</view>
            <view style='display:flex;'>
-            <view class="goods-price">¥ {{item.minPrice}}</view>
-            <view wx:if="{{item.originalPrice && item.originalPrice > 0}}" class="goods-price" style='color:#aaa;text-decoration:line-through'>¥ {{item.originalPrice}}</view>
+            <view class="goods-price">¥ {{item.price}}</view>
+            <view wx:if="{{item.original_price && item.original_price > 0}}" class="goods-price" style='color:#aaa;text-decoration:line-through'>¥ {{item.original_price}}</view>
            </view>           
         </view>
     </view>
