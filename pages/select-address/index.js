@@ -9,11 +9,12 @@ Page({
   selectTap: function (e) {
     var id = e.currentTarget.dataset.id;
     wx.request({
-      url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/user/shipping-address/update',
-      data: {
-        token: wx.getStorageSync('token'),
-        id:id,
-        isDefault:'true'
+      url: app.globalData.domain +'updateDefaultAddress/' + id,
+      method: 'PUT',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
       },
       success: (res) =>{
         wx.navigateBack({})
@@ -35,8 +36,6 @@ Page({
   
   onLoad: function () {
     console.log('onLoad')
-
-   
   },
   onShow : function () {
     this.initShippingAddress();

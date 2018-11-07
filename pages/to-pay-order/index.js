@@ -6,14 +6,12 @@ Page({
   data: {
     totalScoreToPay: 0,
     goodsList:[],
-    isNeedLogistics:0, // 是否需要物流信息
+    isNeedLogistics:1, // 是否需要物流信息
     allGoodsPrice:0,
     yunPrice:0,
     allGoodsAndYunPrice:0,
     goodsJsonStr:"",
     orderType:"", //订单类型，购物车下单或立即支付下单，默认是购物车，
-    pingtuanOpenId:undefined, //拼团的话记录团号
-
     hasNoCoupons: true,
     coupons: [],
     youhuijine:0, //优惠券金额
@@ -25,14 +23,12 @@ Page({
     //立即购买下单
     if ("buyNow"==that.data.orderType){
       var buyNowInfoMem = wx.getStorageSync('buyNowInfo');
-      that.data.kjId = buyNowInfoMem.kjId;
       if (buyNowInfoMem && buyNowInfoMem.shopList) {
         shopList = buyNowInfoMem.shopList
       }
     }else{
       //购物车下单
       var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
-      that.data.kjId = shopCarInfoMem.kjId;
       if (shopCarInfoMem && shopCarInfoMem.shopList) {
         // shopList = shopCarInfoMem.shopList
         shopList = shopCarInfoMem.shopList.filter(entity => {
@@ -49,8 +45,7 @@ Page({
   onLoad: function (e) {
     this.setData({
       isNeedLogistics: 1,
-      orderType: e.orderType,
-      pingtuanOpenId: e.pingtuanOpenId
+      orderType: e.orderType
     });
   },
 
@@ -78,12 +73,6 @@ Page({
       goodsJsonStr: that.data.goodsJsonStr,
       remark: remark
     };
-    if (that.data.kjId) {
-      postData.kjid = that.data.kjId
-    }
-    if (that.data.pingtuanOpenId) {
-      postData.pingtuanOpenId = that.data.pingtuanOpenId
-    }
     if (that.data.isNeedLogistics > 0) {
       if (!that.data.curAddressData) {
         wx.hideLoading();
@@ -111,7 +100,6 @@ Page({
       postData.calculate = "true";
     }
 
-
     wx.request({
       url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/order/create',
       method:'POST',
@@ -121,19 +109,21 @@ Page({
       data: postData, // 设置请求的 参数
       success: (res) =>{
         wx.hideLoading();
-        if (res.data.code != 0) {
-          wx.showModal({
-            title: '错误',
-            content: res.data.msg,
-            showCancel: false
-          })
-          return;
-        }
+        // if (res.data.code != 0) {
+        //   wx.showModal({
+        //     title: '错误',
+        //     content: res.data.msg,
+        //     showCancel: false
+        //   })
+        //   return;
+        // }
 
         if (e && "buyNow" != that.data.orderType) {
           // 清空购物车数据
           wx.removeStorageSync('shopCarInfo');
         }
+        console.log("(=================)")
+        console.log(!e)
         if (!e) {
           that.setData({
             totalScoreToPay: res.data.data.score,
@@ -142,6 +132,7 @@ Page({
             allGoodsAndYunPrice: res.data.data.amountLogistics + res.data.data.amountTotle,
             yunPrice: res.data.data.amountLogistics
           });
+          console.log("=================")
           that.getMyCoupons();
           return;
         }
@@ -172,14 +163,16 @@ Page({
   initShippingAddress: function () {
     var that = this;
     wx.request({
-      url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/user/shipping-address/default',
-      data: {
-        token: wx.getStorageSync('token')
+      url: app.globalData.domain +'api/defaultAddress',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
       },
       success: (res) =>{
-        if (res.data.code == 0) {
+        if (res.data.status == 0 && !(JSON.stringify(res.data.items) === '{}')) {
           that.setData({
-            curAddressData:res.data.data
+            curAddressData:res.data.items
           });
         }else{
           that.setData({
@@ -194,7 +187,7 @@ Page({
     var that = this;
     var goodsList = this.data.goodsList;
     var goodsJsonStr = "[";
-    var isNeedLogistics = 0;
+    var isNeedLogistics = 1;
     var allGoodsPrice = 0;
 
     for (let i = 0; i < goodsList.length; i++) {
@@ -202,7 +195,7 @@ Page({
       if (carShopBean.logistics) {
         isNeedLogistics = 1;
       }
-      allGoodsPrice += carShopBean.price * carShopBean.number;
+      allGoodsPrice += carShopBean.price * carShopBean.num;
 
       var goodsJsonStrTmp = '';
       if (i > 0) {
@@ -211,24 +204,24 @@ Page({
 
 
       let inviter_id = 0;
-      let inviter_id_storge = wx.getStorageSync('inviter_id_' + carShopBean.goodsId);
+      let inviter_id_storge = wx.getStorageSync('inviter_id_' + carShopBean.commodity_id);
       if (inviter_id_storge) {
         inviter_id = inviter_id_storge;
       }
 
 
-      goodsJsonStrTmp += '{"goodsId":' + carShopBean.goodsId + ',"number":' + carShopBean.number + ',"propertyChildIds":"' + carShopBean.propertyChildIds + '","logisticsType":0, "inviter_id":' + inviter_id +'}';
+      goodsJsonStrTmp += '{"goodsId":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"propertyChildIds":"' + carShopBean.specifition_name + '","logisticsType":0, "inviter_id":' + inviter_id +'}';
       goodsJsonStr += goodsJsonStrTmp;
 
 
     }
     goodsJsonStr += "]";
-    //console.log(goodsJsonStr);
+    console.log(goodsJsonStr);
     that.setData({
       isNeedLogistics: isNeedLogistics,
       goodsJsonStr: goodsJsonStr
     });
-    that.createOrder();
+    //that.createOrder();
   },
   addAddress: function () {
     wx.navigateTo({

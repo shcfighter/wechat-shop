@@ -35,7 +35,7 @@ Page({
   },
   onLoad: function () {
       this.initEleWidth();
-      this.onShow();
+      //this.onShow();
   },
   onShow: function(){
       var that = this;
@@ -225,7 +225,7 @@ Page({
         "mask": true
       })
       wx.request({
-        url: app.globalData.domain + 'api/commodity/price/' + list[parseInt(index)].commodity_id,
+        url: app.globalData.domain + 'api/commodity/specifition/price/' + list[parseInt(index)].commodity_id,
         method: "POST",
         data: {
           commodity_id: list[parseInt(index)].commodity_id,
@@ -409,45 +409,52 @@ Page({
           return;
         }
         let carShopBean = shopList[i];
-        console.log(carShopBean);
         // 获取价格和库存
         if (!carShopBean.specifition_name || carShopBean.specifition_name == "") {
           wx.request({
-            url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/shop/goods/detail',
-            data: {
-              id: carShopBean.goodsId
-            },
-
+            url: app.globalData.domain + 'api/commodity/price/' + carShopBean.commodity_id,
+            method: 'POST',
+            data: {},
             header: {
               'content-type': 'application/json', // 默认值
               'token': wx.getStorageSync('token')
             },
             success: function(res) {
+              if(res.data.status != 0){
+                wx.showModal({
+                  title: '提示',
+                  content: '请求失败',
+                  showCancel: false
+                })
+                isFail = true;
+                wx.hideLoading();
+                return;
+              }
               doneNumber++;
-              if (res.data.data.properties) {
+              if (res.data.items.status != 1) {
                 wx.showModal({
                   title: '提示',
-                  content: res.data.data.basicInfo.name + ' 商品已失效，请重新购买',
+                  content: res.data.items.commodity_name + ' 商品已失效，请重新购买',
                   showCancel:false
                 })
                 isFail = true;
                 wx.hideLoading();
                 return;
               }
-              if (res.data.data.basicInfo.stores < carShopBean.num) {
+              if (res.data.items.num < carShopBean.num) {
                 wx.showModal({
                   title: '提示',
-                  content: res.data.data.basicInfo.name + ' 库存不足，请重新购买',
+                  content: res.data.items.commodity_name + ' 库存不足，请重新购买',
                   showCancel:false
                 })
                 isFail = true;
                 wx.hideLoading();
                 return;
               }
-              if (res.data.data.basicInfo.minPrice != carShopBean.price) {
+              if (res.data.items.price != carShopBean.price) {
                 wx.showModal({
                   title: '提示',
-                  content: res.data.data.basicInfo.name + ' 价格有调整，请重新购买',
+                  content: res.data.items.commodity_name + ' 价格有调整，请重新购买',
                   showCancel:false
                 })
                 isFail = true;
@@ -461,7 +468,7 @@ Page({
           })
         } else {
           wx.request({
-            url: app.globalData.domain + 'api/commodity/price/' + carShopBean.commodity_id,
+            url: app.globalData.domain + 'api/commodity/specifition/price/' + carShopBean.commodity_id,
             method: 'POST',
             data: {
               commodity_id: carShopBean.commodity_id,
@@ -472,6 +479,26 @@ Page({
               'token': wx.getStorageSync('token')
             },
             success: function(res) {
+              if (res.data.status != 0) {
+                wx.showModal({
+                  title: '提示',
+                  content: '请求失败',
+                  showCancel: false
+                })
+                isFail = true;
+                wx.hideLoading();
+                return;
+              }
+              if (res.data.items.status != 1) {
+                wx.showModal({
+                  title: '提示',
+                  content: res.data.items.commodity_name + ' 商品已失效，请重新购买',
+                  showCancel: false
+                })
+                isFail = true;
+                wx.hideLoading();
+                return;
+              }
               doneNumber++;
               if (res.data.items.num < carShopBean.num) {
                 wx.showModal({

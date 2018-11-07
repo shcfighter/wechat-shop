@@ -45,6 +45,9 @@ Page({
     wx.getStorage({
       key: 'shopCarInfo',
       success: function(res) {
+        if (null == res.data.shopNum){
+          res.data.shopNum = 0;
+        }
         that.setData({
           shopCarInfo:res.data,
           shopNum:res.data.shopNum
