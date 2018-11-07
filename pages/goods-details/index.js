@@ -187,7 +187,7 @@ Page({
         method: "POST",
         data: {
           commodity_id: that.data.goodsDetail.basicInfo.commodity_id,
-          propertyChildNames: propertyChildNames
+          specifition_name: propertyChildNames
         },
         header: {
           'content-type': 'application/json', // 默认值
