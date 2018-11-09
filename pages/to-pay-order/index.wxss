@@ -127,7 +127,6 @@ form{
 .peisong-way .row-coupon{
     font-size: 28rpx;
     color: #000;
-    line-height: 20px
 }
 .peisong-way .right-text{
     font-size: 28rpx;

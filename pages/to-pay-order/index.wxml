@@ -43,13 +43,13 @@
      <view class="peisong-way" hidden="{{hasNoCoupons}}">
         <view class="row-box" style="border-bottom:none;">
             <view class="row-label">选择使用优惠券</view>
-            <picker-view indicator-style="height: 20rpx;" style="width: 60%; height: 80rpx;" value="0" bindchange="bindChangeCoupon">
-            <picker-view-column>
-              <view class='row-coupon'>不使用优惠券</view>
-              <view wx:for="{{coupons}}" wx:key="id" class='row-coupon'>{{item.coupon_amount}}元 {{item.coupon_name}}</view>
-            </picker-view-column>
-          </picker-view>
         </view>
+        <picker-view indicator-style="height: 50rpx;" style="width: 100%; height: 120rpx;" value="0" bindchange="bindChangeCoupon">
+          <picker-view-column>
+            <view style="line-height: 50px">不使用优惠券</view>
+            <view wx:for="{{coupons}}" wx:key="id" style="line-height: 50px">{{item.coupon_amount}}元 {{item.coupon_name}}</view>
+          </picker-view-column>
+        </picker-view>
      </view>
 
 
@@ -70,7 +70,7 @@
 
      <view class="jiesuan-box">
         <view class="left-price">
-            <view class="total">合计：¥ {{allGoodsAndYunPrice - youhuijine}} + {{totalScoreToPay}} 积分</view>
+            <view class="total">合计：¥ {{allGoodsAndYunPrice - youhuijine}}</view>
         </view>
         <button class="to-pay-btn" formType="submit">提交订单</button>
     </view>

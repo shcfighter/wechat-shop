@@ -13,14 +13,18 @@ Page({
   getMyCoupons: function () {
     var that = this;
     wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/my',
+      url: app.globalData.domain + 'api/findCoupon',
       data: {
         token: wx.getStorageSync('token'),
         status: 0
       },
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
       success: function (res) {
-        if (res.data.code == 0) {
-          var coupons = res.data.data;
+        if (res.data.status == 0) {
+          var coupons = res.data.items;
           if (coupons.length > 0) {
             that.setData({
               coupons: coupons

@@ -1,7 +1,7 @@
 <view class="container">
     <view class="address-list">
         <view class="a-address"  wx:for-items="{{addressList}}" wx:key="{{index}}">
-             <view class="left-text {{item.address_id? 'active':''}}" bindtap="selectTap" data-id="{{item.address_id}}">
+             <view class="left-text {{item.is_default? 'active':''}}" bindtap="selectTap" data-id="{{item.address_id}}">
                  <view class="name-tel">
                     {{item.name}}  {{item.mobile}}
                  </view>

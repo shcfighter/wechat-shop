@@ -39,6 +39,13 @@ Page({
   },
   onShow: function(){
       var that = this;
+      let userInfo = wx.getStorageSync('userInfo')
+      if (!userInfo) {
+        wx.navigateTo({
+          url: "/pages/authorize/index"
+        });
+        return;
+      }
       // 获取购物车数据
       wx.request({
         url: app.globalData.domain + 'api/cartList',

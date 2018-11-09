@@ -32,12 +32,20 @@ Page({
       if (shopCarInfoMem && shopCarInfoMem.shopList) {
         // shopList = shopCarInfoMem.shopList
         shopList = shopCarInfoMem.shopList.filter(entity => {
+          that.data.allGoodsPrice += parseInt(entity.price);
+          if (parseInt(entity.freight_price) > that.data.yunPrice){
+            that.data.yunPrice = parseInt(entity.freight_price);
+          }
           return entity.active;
         });
+
       }
     }
     that.setData({
       goodsList: shopList,
+      yunPrice: that.data.yunPrice,
+      allGoodsPrice: that.data.allGoodsPrice,
+      allGoodsAndYunPrice: that.data.allGoodsPrice + that.data.yunPrice
     });
     that.initShippingAddress();
     that.getMyCoupons();
@@ -123,8 +131,7 @@ Page({
           // 清空购物车数据
           wx.removeStorageSync('shopCarInfo');
         }
-        console.log("(=================)")
-        console.log(!e)
+        
         if (!e) {
           that.setData({
             totalScoreToPay: res.data.data.score,
@@ -133,7 +140,7 @@ Page({
             allGoodsAndYunPrice: res.data.data.amountLogistics + res.data.data.amountTotle,
             yunPrice: res.data.data.amountLogistics
           });
-          console.log("=================")
+          
           that.getMyCoupons();
           return;
         }
@@ -249,7 +256,6 @@ Page({
           //   return entity.min_use_amount <= that.data.allGoodsAndYunPrice;
           // });
           var coupons = res.data.items;
-          console.log("coupons: " + coupons);
           if (coupons.length > 0) {
             that.setData({
               hasNoCoupons: false,
@@ -271,7 +277,7 @@ Page({
     }
     //console.log("selIndex:" + selIndex);
     this.setData({
-      youhuijine: this.data.coupons[selIndex].money,
+      youhuijine: this.data.coupons[selIndex].coupon_amount,
       curCoupon: this.data.coupons[selIndex]
     });
   }

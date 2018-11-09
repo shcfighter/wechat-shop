@@ -74,6 +74,7 @@ Page({
   login: function() {
     let that = this;
     let token = wx.getStorageSync('token');
+    console.log("login token : " + token);
     if (token) {
       wx.request({
         url: app.globalData.domain + '/api/user/check',
@@ -85,9 +86,11 @@ Page({
         success: function(res) {
           if (res.data.status != 0) {
             wx.removeStorageSync('token')
+            console.log("check token fail ");
             that.login();
           } else {
             // 回到原来的地方放
+            console.log("check token success back");
             wx.navigateBack();
           }
         }
@@ -106,6 +109,7 @@ Page({
             //console.log(res)
             if (res.data.status != 0) {
               // 登录错误
+              console.log("login token fail");
               wx.hideLoading();
               wx.showModal({
                 title: '提示',
@@ -118,6 +122,8 @@ Page({
             wx.setStorageSync('token', res.data.items.token)
             wx.setStorageSync('uid', res.data.items.uid)
             // 回到原来的地方放
+            console.log("login token success back");
+            
             wx.navigateBack();
           }
         })

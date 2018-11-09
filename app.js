@@ -2,21 +2,12 @@
 App({
   onLaunch: function () {
     var that = this;    
-
-    // 获取砍价设置
-    wx.request({
-      url: 'https://api.it120.cc/' + that.globalData.subDomain + '/shop/goods/kanjia/list',
-      data: {},
-      success: function (res) {
-        if (res.data.code == 0) {
-          that.globalData.kanjiaList = res.data.data.result;
-        }
-      }
-    })
     // 判断是否登录
     let token = wx.getStorageSync('token');
+    //wx.removeStorageSync('token')
     console.log("token: " + token)
     if (!token) {
+      console.log("1  goLoginPageTimeOut");
       that.goLoginPageTimeOut()
       return
     }
@@ -30,6 +21,7 @@ App({
       success: function (res) {
         if (res.data.status != 0) {
           wx.removeStorageSync('token')
+          console.log("2  goLoginPageTimeOut");
           that.goLoginPageTimeOut()
         }
       }
@@ -84,6 +76,7 @@ App({
     })
   },  
   goLoginPageTimeOut: function () {
+    console.log("3  goLoginPageTimeOut");
     setTimeout(function(){
       wx.navigateTo({
         url: "/pages/authorize/index"
@@ -97,7 +90,6 @@ App({
     subDomain: "tz", // 如果你的域名是： https://api.it120.cc/abcd 那么这里只要填写 abcd
     version: "4.0.0",
     shareProfile: '百款精品商品，总有一款适合您', // 首页转发的时候话术
-
     order_reputation_score: '好评送',
     recharge_amount_min: 0.01   //充值最少金额
   }

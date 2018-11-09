@@ -181,6 +181,14 @@ Page({
   },
   gitCoupon : function (e) {
     var that = this;
+    let userInfo = wx.getStorageSync('userInfo')
+    if (!userInfo) {
+       wx.navigateTo({
+         url: "/pages/authorize/index"
+       });
+       return ;
+    }
+    wx.showLoading();
     wx.request({
       url: app.globalData.domain + 'api/coupon/fetch/' + e.currentTarget.dataset.id,
       method: 'PUT',
@@ -190,6 +198,7 @@ Page({
         'token': wx.getStorageSync('token')
       },
       success: function (res) {
+        wx.hideLoading();
         if(res.data.status != 0){
           wx.showModal({
             title: '错误',

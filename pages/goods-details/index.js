@@ -20,7 +20,7 @@ Page({
     buyNumMin:1,
     buyNumMax:0,
 
-    propertyChildNames:"",
+    specifition_name:"",
     canSubmit:false, //  选中规格尺寸时候是否允许加入购物车
     shopCarInfo:{},
     shopType: "addShopCar",//购物类型，加入购物车或立即购买，默认为加入购物车
@@ -169,13 +169,13 @@ Page({
     // 获取所有的选中规格尺寸数据
     var needSelectNum = that.data.goodsDetail.basicInfo.properties.length;
     var curSelectNum = 0;
-    var propertyChildNames = "";
+    var specifition_name = "";
     for (var i = 0; i < that.data.goodsDetail.basicInfo.properties.length;i++) {
       childs = that.data.goodsDetail.basicInfo.properties[i].childsCurGoods;
       for (var j = 0;j < childs.length;j++) {
         if(childs[j].active){
           curSelectNum++;
-          propertyChildNames = propertyChildNames + that.data.goodsDetail.basicInfo.properties[i].name + ":"+ childs[j].name +"_";
+          specifition_name = specifition_name + that.data.goodsDetail.basicInfo.properties[i].name + ":"+ childs[j].name +"_";
         }
       }
     }
@@ -185,12 +185,17 @@ Page({
     }
     // 计算当前价格
     if (canSubmit) {
+      console.log(specifition_name)
+      var url = "api/commodity/price/";
+      if (specifition_name && specifition_name != "") {
+        url = "api/commodity/specifition/price/";
+      }
       wx.request({
-        url: app.globalData.domain + 'api/commodity/price/' + that.data.goodsDetail.basicInfo.commodity_id,
+        url: app.globalData.domain + url + that.data.goodsDetail.basicInfo.commodity_id,
         method: "POST",
         data: {
           commodity_id: that.data.goodsDetail.basicInfo.commodity_id,
-          specifition_name: propertyChildNames
+          specifition_name: specifition_name
         },
         header: {
           'content-type': 'application/json', // 默认值
@@ -200,7 +205,7 @@ Page({
           that.setData({
             selectSizePrice:res.data.items.price,
             totalScoreToPay: res.data.items.score ? 0 : 0,
-            propertyChildNames:propertyChildNames,
+            specifition_name: specifition_name,
             buyNumMax:res.data.items.num,
             buyNumber: (res.data.items.num>0) ? 1: 0
           });
@@ -254,7 +259,7 @@ Page({
     var shop_num = 0;
     for (var i = 0; i < shopCarInfo.shopList.length; i++){
       var shop = shopCarInfo.shopList[i];
-      if (shop.commodity_id == this.data.goodsDetail.basicInfo.commodity_id && shop.specifition_name == this.data.propertyChildNames){
+      if (shop.commodity_id == this.data.goodsDetail.basicInfo.commodity_id && shop.specifition_name == this.data.specifition_name){
         shop_num = shop.num;
         break;
       }
@@ -269,8 +274,9 @@ Page({
         num: shop_num,
         image_url: this.data.goodsDetail.basicInfo.image_url[0] + "_m",
         commodity_name: this.data.goodsDetail.basicInfo.commodity_name,
-        specifition_name: this.data.propertyChildNames,
-        price: this.data.selectSizePrice
+        specifition_name: this.data.specifition_name,
+        price: this.data.selectSizePrice,
+        freight_price: this.data.goodsDetail.basicInfo.freight + ""
       },
       header: {
         'content-type': 'application/json', // 默认值
@@ -353,13 +359,13 @@ Page({
     shopCarMap.commodity_id = this.data.goodsDetail.basicInfo.commodity_id;
     shopCarMap.pic = this.data.goodsDetail.basicInfo.image_url[0] + "_m";
     shopCarMap.commodity_name = this.data.goodsDetail.basicInfo.commodity_name;
-    shopCarMap.specifition_name = this.data.propertyChildNames;
+    shopCarMap.specifition_name = this.data.specifition_name;
     shopCarMap.price = this.data.selectSizePrice;
     shopCarMap.score = this.data.totalScoreToPay;
     shopCarMap.left = "";
     shopCarMap.active = true;
     shopCarMap.num = this.data.buyNumber;
-    shopCarMap.weight = this.data.goodsDetail.basicInfo.weight;
+    shopCarMap.freight_price = this.data.goodsDetail.basicInfo.freight_price;
 
     var shopCarInfo = this.data.shopCarInfo;
     if (!shopCarInfo.shopNum) {
@@ -395,7 +401,7 @@ Page({
     shopCarMap.pic = this.data.goodsDetail.basicInfo.pic;
     shopCarMap.name = this.data.goodsDetail.basicInfo.name;
     // shopCarMap.label=this.data.goodsDetail.basicInfo.id; 规格尺寸 
-    shopCarMap.label = this.data.propertyChildNames;
+    shopCarMap.label = this.data.specifition_name;
     shopCarMap.price = this.data.selectSizePrice;
     shopCarMap.score = this.data.totalScoreToPay;
     shopCarMap.left = "";

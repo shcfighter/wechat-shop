@@ -9,7 +9,7 @@ Page({
   selectTap: function (e) {
     var id = e.currentTarget.dataset.id;
     wx.request({
-      url: app.globalData.domain +'updateDefaultAddress/' + id,
+      url: app.globalData.domain +'api/updateDefaultAddress/' + id,
       method: 'PUT',
       data: {},
       header: {
