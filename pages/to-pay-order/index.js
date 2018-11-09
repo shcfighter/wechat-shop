@@ -40,6 +40,7 @@ Page({
       goodsList: shopList,
     });
     that.initShippingAddress();
+    that.getMyCoupons();
   },
 
   onLoad: function (e) {
@@ -236,16 +237,19 @@ Page({
   getMyCoupons: function () {
     var that = this;
     wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/my',
-      data: {
-        token: wx.getStorageSync('token'),
-        status:0
+      url: app.globalData.domain + 'api/findCoupon',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
       },
       success: function (res) {
-        if (res.data.code == 0) {
-          var coupons = res.data.data.filter(entity => {
-            return entity.moneyHreshold <= that.data.allGoodsAndYunPrice;
-          });
+        if (res.data.status == 0) {
+          // var coupons = res.data.items.filter(entity => {
+          //   return entity.min_use_amount <= that.data.allGoodsAndYunPrice;
+          // });
+          var coupons = res.data.items;
+          console.log("coupons: " + coupons);
           if (coupons.length > 0) {
             that.setData({
               hasNoCoupons: false,

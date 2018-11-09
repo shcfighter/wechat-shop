@@ -163,15 +163,17 @@ Page({
   getCoupons: function () {
     var that = this;
     wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/coupons',
-      data: {
-        type: ''
+      url: app.globalData.domain + 'api/coupons',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
       },
       success: function (res) {
-        if (res.data.code == 0) {
+        if (res.data.status == 0) {
           that.setData({
             hasNoCoupons: false,
-            coupons: res.data.data
+            coupons: res.data.items
           });
         }
       }
@@ -180,13 +182,23 @@ Page({
   gitCoupon : function (e) {
     var that = this;
     wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/fetch',
-      data: {
-        id: e.currentTarget.dataset.id,
-        token: wx.getStorageSync('token')
+      url: app.globalData.domain + 'api/coupon/fetch/' + e.currentTarget.dataset.id,
+      method: 'PUT',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
       },
       success: function (res) {
-        if (res.data.code == 20001 || res.data.code == 20002) {
+        if(res.data.status != 0){
+          wx.showModal({
+            title: '错误',
+            content: res.data.message,
+            showCancel: false
+          });
+          return ;
+        }
+        if (res.data.items == 0) {
           wx.showModal({
             title: '错误',
             content: '来晚了',
@@ -194,7 +206,7 @@ Page({
           })
           return;
         }
-        if (res.data.code == 20003) {
+        if (res.data.items == 3) {
           wx.showModal({
             title: '错误',
             content: '你领过了，别贪心哦~',
@@ -202,15 +214,7 @@ Page({
           })
           return;
         }
-        if (res.data.code == 30001) {
-          wx.showModal({
-            title: '错误',
-            content: '您的积分不足',
-            showCancel: false
-          })
-          return;
-        }
-        if (res.data.code == 20004) {
+        if (res.data.items == 2) {
           wx.showModal({
             title: '错误',
             content: '已过期~',
@@ -218,17 +222,11 @@ Page({
           })
           return;
         }
-        if (res.data.code == 0) {
+        if (res.data.items == 1) {
           wx.showToast({
             title: '领取成功，赶紧去下单吧~',
             icon: 'success',
             duration: 2000
-          })
-        } else {
-          wx.showModal({
-            title: '错误',
-            content: res.data.msg,
-            showCancel: false
           })
         }
       }
