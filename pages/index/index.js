@@ -26,6 +26,7 @@ Page({
   },
 
   tabClick: function (e) {
+    console.log(e);
     this.setData({
       activeCategory: e.currentTarget.id,
       curPage: 1

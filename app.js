@@ -84,7 +84,7 @@ App({
     }, 1000)    
   },
   globalData:{
-    domain: "http://111.231.132.168/",
+    domain: "http://localhost:8080/",
     userInfo:null,
     mallName: "天使童装",
     subDomain: "tz", // 如果你的域名是： https://api.it120.cc/abcd 那么这里只要填写 abcd

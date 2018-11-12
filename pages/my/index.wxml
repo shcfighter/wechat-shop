@@ -4,6 +4,31 @@
 		<text class="userinfo-nickname">{{ userInfo.nickName }}</text>
 	</view>
   <view style="height:20rpx;background: #eee;width:100%;"></view>
+  <view class="a-section a-topic" wx:if="{{channel.length > 0}}">
+    <view class="m-menu">
+      <navigator class="item" url="url">
+        <image src="/images/my/my_order.png" background-size="cover"></image>
+        <text>全部订单</text>
+      </navigator>
+      <navigator class="item" url="url">
+        <image src="/images/my/obligation.png" background-size="cover"></image>
+        <text>待付款</text>
+      </navigator>
+      <navigator class="item" url="url">
+        <image src="/images/my/to_be_shipped.png" background-size="cover"></image>
+        <text>待发货</text>
+      </navigator>
+      <navigator class="item" url="url">
+        <image src="/images/my/to_be_evaluated.png" background-size="cover"></image>
+        <text>待评价</text>
+      </navigator>
+      <navigator class="item" url="url">
+        <image src="/images/my/customer_service.png" background-size="cover"></image>
+        <text>退款/售后</text>
+      </navigator>
+    </view>
+  </view>
+  <view style="height:20rpx;background: #eee;width:100%;"></view>
   <view class="my-item" style='background:none;display:flex;flex-direction:column;height:auto;'>
     <view>
       余额 {{balance}} 元， 冻结 {{freeze}} 元

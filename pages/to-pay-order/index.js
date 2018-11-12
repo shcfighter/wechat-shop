@@ -29,6 +29,7 @@ Page({
     }else{
       //购物车下单
       var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
+      console.log(shopCarInfoMem);
       if (shopCarInfoMem && shopCarInfoMem.shopList) {
         // shopList = shopCarInfoMem.shopList
         shopList = shopCarInfoMem.shopList.filter(entity => {
@@ -78,8 +79,7 @@ Page({
     }
 
     var postData = {
-      token: loginToken,
-      goodsJsonStr: that.data.goodsJsonStr,
+      order_details: JSON.parse(that.data.goodsJsonStr),
       remark: remark
     };
     if (that.data.isNeedLogistics > 0) {
@@ -92,28 +92,21 @@ Page({
         })
         return;
       }
-      postData.provinceId = that.data.curAddressData.provinceId;
-      postData.cityId = that.data.curAddressData.cityId;
-      if (that.data.curAddressData.districtId) {
-        postData.districtId = that.data.curAddressData.districtId;
-      }
-      postData.address = that.data.curAddressData.address;
-      postData.linkMan = that.data.curAddressData.linkMan;
-      postData.mobile = that.data.curAddressData.mobile;
-      postData.code = that.data.curAddressData.code;
+      postData.address_id = that.data.curAddressData.address_id;
     }
     if (that.data.curCoupon) {
-      postData.couponId = that.data.curCoupon.id;
+      postData.coupon_id = that.data.curCoupon.coupon_detail_id;
     }
     if (!e) {
       postData.calculate = "true";
     }
-
+    console.log(postData)
     wx.request({
-      url: 'https://api.it120.cc/'+ app.globalData.subDomain +'/order/create',
-      method:'POST',
+      url: app.globalData.domain +'api/order/insert',
+      method:'PUT',
       header: {
-        'content-type': 'application/x-www-form-urlencoded'
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
       },
       data: postData, // 设置请求的 参数
       success: (res) =>{
@@ -132,35 +125,19 @@ Page({
           wx.removeStorageSync('shopCarInfo');
         }
         
-        if (!e) {
-          that.setData({
-            totalScoreToPay: res.data.data.score,
-            isNeedLogistics: res.data.data.isNeedLogistics,
-            allGoodsPrice: res.data.data.amountTotle,
-            allGoodsAndYunPrice: res.data.data.amountLogistics + res.data.data.amountTotle,
-            yunPrice: res.data.data.amountLogistics
-          });
+        // if (!e) {
+        //   that.setData({
+        //     totalScoreToPay: res.data.data.score,
+        //     isNeedLogistics: res.data.data.isNeedLogistics,
+        //     allGoodsPrice: res.data.data.amountTotle,
+        //     allGoodsAndYunPrice: res.data.data.amountLogistics + res.data.data.amountTotle,
+        //     yunPrice: res.data.data.amountLogistics
+        //   });
           
-          that.getMyCoupons();
-          return;
-        }
-        // 配置模板消息推送
-        var postJsonString = {};
-        postJsonString.keyword1 = { value: res.data.data.dateAdd, color: '#173177' }
-        postJsonString.keyword2 = { value: res.data.data.amountReal + '元', color: '#173177' }
-        postJsonString.keyword3 = { value: res.data.data.orderNumber, color: '#173177' }
-        postJsonString.keyword4 = { value: '订单已关闭', color: '#173177' }
-        postJsonString.keyword5 = { value: '您可以重新下单，请在30分钟内完成支付', color:'#173177'}
-        app.sendTempleMsg(res.data.data.id, -1,
-          'mGVFc31MYNMoR9Z-A9yeVVYLIVGphUVcK2-S2UdZHmg', e.detail.formId,
-          'pages/index/index', JSON.stringify(postJsonString));
-        postJsonString = {};
-        postJsonString.keyword1 = { value: '您的订单已发货，请注意查收', color: '#173177' }
-        postJsonString.keyword2 = { value: res.data.data.orderNumber, color: '#173177' }
-        postJsonString.keyword3 = { value: res.data.data.dateAdd, color: '#173177' }
-        app.sendTempleMsg(res.data.data.id, 2,
-          'Arm2aS1rsklRuJSrfz-QVoyUzLVmU2vEMn_HgMxuegw', e.detail.formId,
-          'pages/order-details/index?id=' + res.data.data.id, JSON.stringify(postJsonString));
+        //   that.getMyCoupons();
+        //   return;
+        // }
+        
         // 下单成功，跳转到订单管理界面
         wx.redirectTo({
           url: "/pages/order-list/index"
@@ -218,13 +195,13 @@ Page({
       }
 
 
-      goodsJsonStrTmp += '{"goodsId":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"propertyChildIds":"' + carShopBean.specifition_name + '","logisticsType":0, "inviter_id":' + inviter_id +'}';
+      goodsJsonStrTmp += '{"commodity_id":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"specifition_name":"' + carShopBean.specifition_name + '","logisticsType":0, "inviter_id":' + inviter_id +'}';
       goodsJsonStr += goodsJsonStrTmp;
 
 
     }
     goodsJsonStr += "]";
-    console.log(goodsJsonStr);
+    
     that.setData({
       isNeedLogistics: isNeedLogistics,
       goodsJsonStr: goodsJsonStr
