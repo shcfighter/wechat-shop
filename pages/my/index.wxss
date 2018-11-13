@@ -6,9 +6,9 @@
 .userinfo {
 	display: flex;
 	flex-direction: column;
-	padding: 50rpx 0;
+	padding: 0rpx 0;
 	align-items: center;
-	background: #e85654;
+	background: #fff;
   width: 750rpx;
 }
 
@@ -21,7 +21,7 @@
 
 .userinfo-nickname {
   margin-top: 20rpx;
-  color: #FFF;
+  color: #404040;
 }
 
 

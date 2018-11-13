@@ -2,7 +2,7 @@ var wxpay = require('../../utils/pay.js')
 var app = getApp()
 Page({
   data:{
-    statusType: ["待付款", "待发货", "待收货", "待评价", "已完成"],
+    statusType: ["全部", "待付款", "待发货", "待收货", "待评价", "已完成"],
     currentType:0,
     tabClass: ["", "", "", "", ""]
   },
@@ -151,26 +151,28 @@ Page({
     // 获取订单列表
     wx.showLoading();
     var that = this;
-    var postData = {
-      token: wx.getStorageSync('token')
-    };
-    postData.status = that.data.currentType;
-    this.getOrderStatistics();
+    //this.getOrderStatistics();
     wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/list',
-      data: postData,
+      url: app.globalData.domain + 'api/order/list',
+      data: {
+        'status': that.data.currentType,
+        'page': 1,
+        'pageSize': 10
+      },
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
       success: (res) => {
         wx.hideLoading();
-        if (res.data.code == 0) {
+        if (res.data.status == 0) {
           that.setData({
-            orderList: res.data.data.orderList,
-            logisticsMap : res.data.data.logisticsMap,
-            goodsMap : res.data.data.goodsMap
+            orderList: res.data.items,
+            goodsMap: JSON.stringify(res.data.items.order_details)
           });
         } else {
           this.setData({
             orderList: null,
-            logisticsMap: {},
             goodsMap: {}
           });
         }

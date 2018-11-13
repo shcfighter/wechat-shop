@@ -73,14 +73,14 @@ Page({
     wx.showLoading();
     var that = this;
     var loginToken = wx.getStorageSync('token') // 用户登录 token
-    var remark = ""; // 备注信息
+    var remarks = ""; // 备注信息
     if (e) {
-      remark = e.detail.value.remark; // 备注信息
+      remarks = e.detail.value.remark; // 备注信息
     }
 
     var postData = {
       order_details: JSON.parse(that.data.goodsJsonStr),
-      remark: remark
+      remarks: remarks
     };
     if (that.data.isNeedLogistics > 0) {
       if (!that.data.curAddressData) {
@@ -195,7 +195,7 @@ Page({
       }
 
 
-      goodsJsonStrTmp += '{"commodity_id":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"specifition_name":"' + carShopBean.specifition_name + '","logisticsType":0, "inviter_id":' + inviter_id +'}';
+      goodsJsonStrTmp += '{"commodity_id":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"specifition_name":"' + carShopBean.specifition_name + '","logisticsType":0, "cart_id":"' + carShopBean.cart_id +'"}';
       goodsJsonStr += goodsJsonStrTmp;
 
 
