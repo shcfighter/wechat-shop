@@ -2,9 +2,13 @@ var wxpay = require('../../utils/pay.js')
 var app = getApp()
 Page({
   data:{
-    statusType: ["全部", "待付款", "待发货", "待收货", "待评价", "已完成"],
+    statusType: ["全部", "待付款", "待发货", "待收货", "待评价", "已完成", "退款"],
     currentType:0,
-    tabClass: ["", "", "", "", ""]
+    loadingMoreHidden: true,
+    tabClass: ["", "", "", "", ""],
+    page: 1,
+    pageSize: 10,
+    orderList: []
   },
   statusTap:function(e){
      var curType =  e.currentTarget.dataset.index;
@@ -97,9 +101,15 @@ Page({
       }
     })    
   },
-  onLoad:function(options){
+  onLoad:function(e){
     // 生命周期函数--监听页面加载
-   
+    var curType = e.type;
+    if(curType){
+      this.data.currentType = curType;
+      this.setData({
+        currentType: curType
+      });
+    }
   },
   onReady:function(){
     // 生命周期函数--监听页面初次渲染完成
@@ -148,6 +158,13 @@ Page({
     })
   },
   onShow:function(){
+    this.setData({
+      page: 1,
+      loadingMoreHidden: true
+    });
+    this.getOrderList();
+  },
+  getOrderList: function (append){
     // 获取订单列表
     wx.showLoading();
     var that = this;
@@ -156,8 +173,8 @@ Page({
       url: app.globalData.domain + 'api/order/list',
       data: {
         'status': that.data.currentType,
-        'page': 1,
-        'pageSize': 10
+        'page': that.data.page,
+        'pageSize': that.data.pageSize
       },
       header: {
         'content-type': 'application/json', // 默认值
@@ -166,19 +183,29 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.data.status == 0) {
+          if(res.data.items.length == 0){
+            that.setData({
+              loadingMoreHidden: false
+            });
+          }
+          let orderList = [];
+          if (append){
+            orderList = that.data.orderList;
+          }
+          
+          for (var i = 0; i < res.data.items.length; i++) {
+            orderList.push(res.data.items[i]);
+          }
           that.setData({
-            orderList: res.data.items,
-            goodsMap: JSON.stringify(res.data.items.order_details)
+            orderList: orderList
           });
         } else {
           this.setData({
-            orderList: null,
-            goodsMap: {}
+            orderList: []
           });
         }
       }
     })
-    
   },
   onHide:function(){
     // 生命周期函数--监听页面隐藏
@@ -194,6 +221,9 @@ Page({
   },
   onReachBottom: function() {
     // 页面上拉触底事件的处理函数
-  
+    this.setData({
+      page: this.data.page + 1
+    });
+    this.getOrderList(true);
   }
 })

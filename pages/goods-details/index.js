@@ -19,7 +19,6 @@ Page({
     buyNumber:0,
     buyNumMin:1,
     buyNumMax:0,
-
     specifition_name:"",
     canSubmit:false, //  选中规格尺寸时候是否允许加入购物车
     shopCarInfo:{},
@@ -175,7 +174,7 @@ Page({
       for (var j = 0;j < childs.length;j++) {
         if(childs[j].active){
           curSelectNum++;
-          specifition_name = specifition_name + that.data.goodsDetail.basicInfo.properties[i].name + ":"+ childs[j].name +"_";
+          specifition_name = specifition_name + that.data.goodsDetail.basicInfo.properties[i].name + ":"+ childs[j].name +";";
         }
       }
     }

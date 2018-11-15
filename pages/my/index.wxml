@@ -6,19 +6,19 @@
   <!-- <view style="height:20rpx;background: #eee;width:100%;"></view> -->
   <view class="a-section a-topic">
     <view class="m-menu">
-      <navigator class="item" url="url">
+      <navigator class="item" url="/pages/order-list/index?type=1">
         <image src="/images/my/obligation.png" background-size="cover"></image>
         <text>待付款</text>
       </navigator>
-      <navigator class="item" url="url">
+      <navigator class="item" url="/pages/order-list/index?type=2">
         <image src="/images/my/to_be_shipped.png" background-size="cover"></image>
         <text>待发货</text>
       </navigator>
-      <navigator class="item" url="url">
+      <navigator class="item" url="/pages/order-list/index?type=3">
         <image src="/images/my/to_be_evaluated.png" background-size="cover"></image>
         <text>待评价</text>
       </navigator>
-      <navigator class="item" url="url">
+      <navigator class="item" url="/pages/order-list/index?type=6">
         <image src="/images/my/customer_service.png" background-size="cover"></image>
         <text>退款/售后</text>
       </navigator>

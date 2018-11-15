@@ -238,6 +238,9 @@ Page({
     }
   },
   getDistrict: function(provinceId, cityId, districtId){
+    if(districtId){
+      return ;
+    }
     for (var i = 0; i < commonCityData.cityData.length; i++) {
       if (provinceId == commonCityData.cityData[i].id) {
         for (var j = 0; j < commonCityData.cityData[i].cityList.length; j++) {
@@ -284,7 +287,7 @@ Page({
           wx.request({
             url: app.globalData.domain + '/api/delAddress/' + id,
             data: {},
-            method: DELETE,
+            method: 'PUT',
             header: {
               'content-type': 'application/json', // 默认值
               'token': wx.getStorageSync('token')

@@ -108,7 +108,6 @@ Page({
       }
     }
   },
-
   touchE:function(e){
     var index = e.currentTarget.dataset.index;    
     if(e.changedTouches.length==1){
@@ -124,6 +123,40 @@ Page({
 
       }
     }
+  },
+  delItem: function (e) {
+    console.log("delItem=======================")
+    var that = this;
+    var index = e.currentTarget.dataset.index;
+    console.log(index)
+    var list = this.data.goodsList.list;
+    console.log(list)
+    console.log(list[index].cart_id)
+    //删除数据
+    wx.request({
+      url: app.globalData.domain + 'api/delCart/' + list[index].cart_id,
+      method: "PUT",
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        console.log(res)
+        wx.hideLoading();
+        if (res.data.status != 0) {
+          wx.showModal({
+            title: '提示',
+            content: '删除购物车失败！',
+            showCancel: false
+          })
+          return;
+        }
+        list.splice(index, 1);
+        console.log(list);
+        that.setGoodsList(that.getSaveHide(), that.totalPrice(), that.allSelect(), that.noSelect(), list);
+      }
+    })
   },
   selectTap:function(e){
     var index = e.currentTarget.dataset.index;
@@ -231,14 +264,22 @@ Page({
         title: '加载中',
         "mask": true
       })
+      console.log("jiaBtnTap");
+      console.log(list[parseInt(index)]);
+      var url = "api/commodity/specifition/price/";
+      if (!carShopBean.specifition_name){
+        url = "api/commodity/price/";
+      }
+      console.log(url)
       wx.request({
-        url: app.globalData.domain + 'api/commodity/specifition/price/' + list[parseInt(index)].commodity_id,
+        url: app.globalData.domain + url + list[parseInt(index)].commodity_id,
         method: "POST",
         data: {
           commodity_id: list[parseInt(index)].commodity_id,
           specifition_name: list[parseInt(index)].specifition_name
         },
         success: function (res) {
+          console.log(res);
           if(res.data.status != 0){
             wx.hideLoading();
             return ;
@@ -270,15 +311,12 @@ Page({
                   })
                   return;
                 }
+                that.setGoodsList(that.getSaveHide(), that.totalPrice(), that.allSelect(), that.noSelect(), list);
               }
             })
           }else{
             wx.hideLoading();
           }
-          that.setGoodsList(that.getSaveHide(), that.totalPrice(), that.allSelect(), that.noSelect(), list);
-          that.setData({
-            curTouchGoodStore: carShopBeanStores
-          })
         }
       })
     }
@@ -318,6 +356,7 @@ Page({
               })
               return;
             }
+            that.setGoodsList(that.getSaveHide(), that.totalPrice(), that.allSelect(), that.noSelect(), list);
           }
         })
       }
@@ -344,6 +383,7 @@ Page({
      return saveHidden;
    },
    deleteSelected:function(){
+     console.loe(deleteSelected)
       var list = this.data.goodsList.list;
      /*
       for(let i = 0 ; i < list.length ; i++){
@@ -362,11 +402,12 @@ Page({
        }
         return !curGoods.active;
      });
-     //console.log("========== " + arr.join(","))
+     console.log(list);
+     
      //入库
      wx.request({
        url: app.globalData.domain + 'api/delBatchCart',
-       method: "DELETE",
+       method: "PUT",
        data: {
          carts: arr.join(",")
        },
@@ -383,9 +424,9 @@ Page({
            })
            return;
          }
+         this.setGoodsList(this.getSaveHide(), this.totalPrice(), this.allSelect(), this.noSelect(), list);
        }
      })
-     this.setGoodsList(this.getSaveHide(), this.totalPrice(), this.allSelect(), this.noSelect(), list);
     },
     toPayOrder:function(){
       wx.showLoading();
@@ -427,6 +468,7 @@ Page({
               'token': wx.getStorageSync('token')
             },
             success: function(res) {
+              //console.log(res);
               if(res.data.status != 0){
                 wx.showModal({
                   title: '提示',

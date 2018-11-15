@@ -2,8 +2,8 @@ var app = getApp();
 Page({
     data:{
       orderId:0,
-        goodsList:[],
-        yunPrice:"0.00"
+      goodsList:[],
+      yunPrice:"0.00"
     },
     onLoad:function(e){
       var orderId = e.id;
@@ -15,23 +15,24 @@ Page({
     onShow : function () {
       var that = this;
       wx.request({
-        url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/detail',
-        data: {
-          token: wx.getStorageSync('token'),
-          id: that.data.orderId
+        url: app.globalData.domain + 'api/order/detail/' + that.data.orderId,
+        data: {},
+        header: {
+          'content-type': 'application/json', // 默认值
+          'token': wx.getStorageSync('token')
         },
         success: (res) => {
           wx.hideLoading();
-          if (res.data.code != 0) {
+          if (res.data.status != 0) {
             wx.showModal({
               title: '错误',
-              content: res.data.msg,
+              content: res.data.message,
               showCancel: false
             })
             return;
           }
           that.setData({
-            orderDetail: res.data.data
+            orderDetail: res.data.items
           });
         }
       })
