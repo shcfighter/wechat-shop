@@ -26,9 +26,9 @@
         <view class="goods-price" style="color:#999;font-size:24rpx;">购买{{goodsDetail.basicInfo.total_sales_volume}}次</view>
         <view class="goods-price" style="color:#999;font-size:24rpx;">共收到 {{goodsDetail.basicInfo.total_evaluation_num}} 次好评</view>
         <view class="goods-info-fx">
-          <image src='../../images/qd.png' />
+          <image src='../../images/share.png' />
           <button open-type="share">分享</button>
-          <text>分享</text>
+          <text style='padding-left:5px;'>分享</text>
         </view>
    </view>
 
@@ -58,6 +58,9 @@
         <view class="contact">
           <contact-button style="opacity:0;position:absolute;" type="default-dark"  session-from="weapp" size="27"></contact-button>
           <view style='position:absolute;bottom:10rpx;'> 客服 </view>
+        </view>
+        <view class="{{is_collect ? 'collect_red' : 'collect'}}" bindtap='toCollect'>
+          <view style='position:absolute;bottom:10rpx;'> 收藏 </view>
         </view>
         <view class="shop-cart-btn" bindtap="goShopCar">
             <view class="shop-num">({{shopNum}})</view>

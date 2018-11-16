@@ -88,8 +88,29 @@ Page({
         WxParse.wxParse('article', 'html', res.data.items.content, that, 5);
       }
     })
+    this.isCollect(e.id);
     this.reputation(e.id);
     
+  },
+  isCollect(id){
+    var that = this;
+    //判断是否收藏
+    wx.request({
+      url: app.globalData.domain + 'api/collect/findCommodity/' + id,
+      data: {},
+      method: "GET",
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if(res.data.status == 0 && res.data.items == 0){
+          that.setData({
+            is_collect: true
+          });
+        }
+      }
+    })
   },
   goShopCar: function () {
     wx.reLaunch({
@@ -101,6 +122,36 @@ Page({
       shopType: "addShopCar"
     })
     this.bindGuiGeTap();
+  },
+  toCollect: function () {
+    var that = this;
+    //收藏
+    wx.request({
+      url: app.globalData.domain + 'api/collect/' + this.data.goodsDetail.basicInfo.commodity_id,
+      data: {},
+      method: "PUT",
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if (res.data.status != 0) {
+          wx.showModal({
+            title: '错误',
+            content: '收藏失败',
+            showCancel: false
+          })
+          return;
+        }
+        var isCollect = false;
+        if(res.data.items == 0){
+          isCollect = true;
+        }
+        that.setData({
+          is_collect: isCollect
+        });
+      }
+    });
   },
   tobuy: function () {
     this.setData({
