@@ -105,7 +105,6 @@ Page({
     if (!e) {
       postData.calculate = "true";
     }
-    console.log(postData)
     wx.request({
       url: app.globalData.domain +'api/order/insert',
       method:'PUT',
@@ -191,16 +190,12 @@ Page({
       if (i > 0) {
         goodsJsonStrTmp = ",";
       }
-
-
       let inviter_id = 0;
       let inviter_id_storge = wx.getStorageSync('inviter_id_' + carShopBean.commodity_id);
       if (inviter_id_storge) {
         inviter_id = inviter_id_storge;
       }
-
-
-      goodsJsonStrTmp += '{"commodity_id":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"specifition_name":"' + carShopBean.specifition_name + '","logisticsType":0, "cart_id":"' + carShopBean.cart_id +'"}';
+      goodsJsonStrTmp += '{"commodity_id":' + carShopBean.commodity_id + ',"number":' + carShopBean.num + ',"specifition_name":"' + carShopBean.specifition_name + '","logisticsType":0, "cart_id":"' + (carShopBean.cart_id ? carShopBean.cart_id : 0) +'"}';
       goodsJsonStr += goodsJsonStrTmp;
 
 

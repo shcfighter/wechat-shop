@@ -2,7 +2,7 @@ var wxpay = require('../../utils/pay.js')
 var app = getApp()
 Page({
   data:{
-    statusType: ["全部", "待付款", "待发货", "待收货", "待评价", "已完成", "退款"],
+    statusType: ["全部", "待付款", "待发货", "待收货", "待评价", "已完成", "退款中"],
     currentType:0,
     loadingMoreHidden: true,
     tabClass: ["", "", "", "", ""],
@@ -34,16 +34,25 @@ Page({
         if (res.confirm) {
           wx.showLoading();
           wx.request({
-            url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/close',
-            data: {
-              token: wx.getStorageSync('token'),
-              orderId: orderId
+            url: app.globalData.domain + 'api/order/cancel/' + orderId,
+            method: "PUT",
+            data: {},
+            header: {
+              'content-type': 'application/json', // 默认值
+              'token': wx.getStorageSync('token')
             },
             success: (res) => {
               wx.hideLoading();
-              if (res.data.code == 0) {
-                that.onShow();
+              if (res.data.status == -1 || res.data.items == -1) {
+                wx.showModal({
+                  title: '错误',
+                  content: '取消订单失败',
+                  showCancel: false
+                })
+                return;
               }
+              console.log("success");
+              that.onShow();
             }
           })
         }
@@ -54,52 +63,8 @@ Page({
     var that = this;
     var orderId = e.currentTarget.dataset.id;
     var money = e.currentTarget.dataset.money;
-    var needScore = e.currentTarget.dataset.score;
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/amount',
-      data: {
-        token: wx.getStorageSync('token')
-      },
-      success: function (res) {
-        if (res.data.code == 0) {
-          // res.data.data.balance
-          money = money - res.data.data.balance;
-          if (res.data.data.score < needScore) {
-            wx.showModal({
-              title: '错误',
-              content: '您的积分不足，无法支付',
-              showCancel: false
-            })
-            return;
-          }
-          if (money <= 0) {
-            // 直接使用余额支付
-            wx.request({
-              url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/pay',
-              method:'POST',
-              header: {
-                'content-type': 'application/x-www-form-urlencoded'
-              },
-              data: {
-                token: wx.getStorageSync('token'),
-                orderId: orderId
-              },
-              success: function (res2) {
-                that.onShow();
-              }
-            })
-          } else {
-            wxpay.wxpay(app, money, orderId, "/pages/order-list/index");
-          }
-        } else {
-          wx.showModal({
-            title: '错误',
-            content: '无法获取用户资金信息',
-            showCancel: false
-          })
-        }
-      }
-    })    
+    console.log("orderId: " + orderId + ", money: " + money)
+    wxpay.wxpay(app, money, orderId, "/pages/order-list/index");
   },
   onLoad:function(e){
     // 生命周期函数--监听页面加载

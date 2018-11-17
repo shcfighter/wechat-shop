@@ -10,11 +10,16 @@
         <view class="text">暂无订单</view>
     </view>
     <view class="order-list" hidden="{{orderList ? false : true}}">
-        <view class="a-order" wx:for-items="{{orderList}}" wx:key="{{index}}">
+        <view class="a-order" wx:for="{{orderList}}" wx:key="{{index}}">
             <view class="order-date">
                 <view class="date-box">下单时间：{{item.create_time}}</view>
-                <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item.statusStr}}
-                </view>
+                <view class="status red" wx:if="{{item.order_status == 1}}">代付款</view>
+                <view class="status" wx:elif="{{item.order_status == 2}}">代发货</view>
+                <view class="status" wx:elif="{{item.order_status == 3}}">代收货</view>
+                <view class="status" wx:elif="{{item.order_status == 4}}">代评价</view>
+                <view class="status" wx:elif="{{item.order_status == 5}}">已完成</view>
+                <view class="status red" wx:elif="{{item.order_status == 6}}">退款中</view>
+                <view class="status" wx:else="{{item.order_status == -1}}">已取消</view>
             </view>
             <view class="goods-info" bindtap="orderDetail" data-id="{{item.order_id}}">
                 <view class="goods-des">
@@ -23,7 +28,7 @@
                 </view>
             </view>
             <view class="goods-list">
-              <block wx:for="{{item.order_details}}" wx:for-item="commodity">
+              <block wx:for="{{item.order_details}}" wx:for-item="commodity" wx:key="cid">
                 <view class="a-goods">
                     <view class="img-box">
                         <image src="{{commodity.image_url}}_m" class="img" />
@@ -42,10 +47,9 @@
               </block>
             </view>
             <view class="price-box">
-                <view class="total-price" wx:if="{{item.score <= 0}}">合计：¥ {{item.amountReal}}</view>
-                <view class="total-price" wx:if="{{item.score > 0}}">合计：¥ {{item.amountReal}} + {{item.score}} 积分</view>
-                <view class="btn cancel-btn" hidden="{{item.status==0? fslse : true}}" bindtap="cancelOrderTap"  data-id="{{item.id}}">取消订单</view>
-                <view class="btn topay-btn" hidden="{{item.status==0? fslse : true}}" bindtap="toPayTap" data-id="{{item.id}}" data-money="{{item.amountReal}}" data-score="{{item.score}}">马上付款</view>        
+                <view class="total-price">合计：¥ {{item.actual_price}}</view>
+                <view class="btn cancel-btn" hidden="{{item.order_status==1? false : true}}" bindtap="cancelOrderTap"  data-id="{{item.order_id}}">取消订单</view>
+                <view class="btn topay-btn" hidden="{{item.order_status==1? false : true}}" bindtap="toPayTap" data-id="{{item.order_id}}" data-money="{{item.actual_price}}" data-score="{{item.score}}">马上付款</view>        
             </view>  
         </view>
     </view>

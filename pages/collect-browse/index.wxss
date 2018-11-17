@@ -203,6 +203,7 @@
 .no-more-goods{
   text-align: center;
   font-size: 24rpx;
+  padding-top: 40rpx;
   padding-bottom:48rpx; 
   color: #999;
 }
