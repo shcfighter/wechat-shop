@@ -379,7 +379,7 @@ Page({
     let that = this
     let shoptype = e.currentTarget.dataset.shoptype
     //console.log(shoptype)
-    if (this.data.goodsDetail.properties && !this.data.canSubmit) {
+    if (this.data.goodsDetail.basicInfo.properties && !this.data.canSubmit) {
       if (!this.data.canSubmit) {
         wx.showModal({
           title: '提示',
@@ -463,19 +463,17 @@ Page({
 	 */
   buliduBuyNowInfo: function (shoptype) {
     var shopCarMap = {};
-    shopCarMap.goodsId = this.data.goodsDetail.basicInfo.id;
-    shopCarMap.pic = this.data.goodsDetail.basicInfo.pic;
-    shopCarMap.name = this.data.goodsDetail.basicInfo.name;
+    shopCarMap.commodity_id = this.data.goodsDetail.basicInfo.commodity_id;
+    shopCarMap.image_url = this.data.goodsDetail.basicInfo.image_url[0] + "_m";
+    shopCarMap.commodity_name = this.data.goodsDetail.basicInfo.commodity_name;
     // shopCarMap.label=this.data.goodsDetail.basicInfo.id; 规格尺寸 
-    shopCarMap.label = this.data.specifition_name;
+    shopCarMap.specifition_name = this.data.specifition_name;
     shopCarMap.price = this.data.selectSizePrice;
     shopCarMap.score = this.data.totalScoreToPay;
     shopCarMap.left = "";
     shopCarMap.active = true;
-    shopCarMap.number = this.data.buyNumber;
-    shopCarMap.logisticsType = this.data.goodsDetail.basicInfo.logisticsId;
-    shopCarMap.logistics = this.data.goodsDetail.logistics;
-    shopCarMap.weight = this.data.goodsDetail.basicInfo.weight;
+    shopCarMap.num = this.data.buyNumber;
+    shopCarMap.freight_price = this.data.goodsDetail.basicInfo.freight_price;
 
     var buyNowInfo = {};
     if (!buyNowInfo.shopNum) {

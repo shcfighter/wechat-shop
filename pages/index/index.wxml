@@ -50,7 +50,7 @@
             <view class="coupons-item" wx:for-items="{{coupons}}" wx:for-index="idx" wx:key="id"  bindtap="gitCoupon" data-id="{{item.coupon_id}}">
                <view style="font-size: 35rpx"> ￥ {{item.coupon_amount}}元 </view>
                <view> {{item.coupon_name}} </view>
-               <view> 满 {{item.min_user_amount}} 元使用 </view>
+               <view> 满 {{item.min_use_amount}} 元使用 </view>
                <view> 领取 {{item.expiry_date}} 天内有效 </view>
             </view>
         </scroll-view>

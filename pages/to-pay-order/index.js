@@ -26,14 +26,19 @@ Page({
       if (buyNowInfoMem && buyNowInfoMem.shopList) {
         shopList = buyNowInfoMem.shopList
       }
+      console.log(shopList)
+      var entity = shopList[0];
+      that.data.allGoodsPrice += parseInt(entity.price) * parseInt(entity.num);
+      if (parseInt(entity.freight_price) > that.data.yunPrice) {
+        that.data.yunPrice = parseInt(entity.freight_price);
+      }
     }else{
       //购物车下单
       var shopCarInfoMem = wx.getStorageSync('shopCarInfo');
-      console.log(shopCarInfoMem);
       if (shopCarInfoMem && shopCarInfoMem.shopList) {
         // shopList = shopCarInfoMem.shopList
         shopList = shopCarInfoMem.shopList.filter(entity => {
-          that.data.allGoodsPrice += parseInt(entity.price);
+          that.data.allGoodsPrice += parseInt(entity.price) * parseInt(entity.num);
           if (parseInt(entity.freight_price) > that.data.yunPrice){
             that.data.yunPrice = parseInt(entity.freight_price);
           }
