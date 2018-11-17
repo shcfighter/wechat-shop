@@ -1,6 +1,21 @@
 <view class="container">
+  <view class="status-box">
+    <view bindtap="statusTap" class="status-label {{0 == currentType ? 'active' : ''}}" data-index="0">
+        未使用
+        <view class="{{tabClass[0]}}"></view>
+    </view>
+    <view bindtap="statusTap" class="status-label {{1 == currentType ? 'active' : ''}}" data-index="1">
+        已使用
+        <view class="{{tabClass[1]}}"></view>
+    </view>
+    <view bindtap="statusTap" class="status-label {{2 == currentType ? 'active' : ''}}" data-index="2">
+        已过期
+        <view class="{{tabClass[2]}}"></view>
+    </view>
+  </view>
+  <view hidden="{{coupons.length == 0}}">
     <view class="coupons-list">
-      <view class="coupons-item" wx:for-items="{{coupons}}" wx:for-index="idx"  bindtap="gitCoupon" data-id="{{item.coupon_detail_id}}">
+      <view class="coupons-item" wx:for="{{coupons}}" wx:key="index" bindtap="gitCoupon" data-id="{{item.coupon_detail_id}}">
         <view style="font-size: 50rpx"> ￥ {{item.coupon_amount}}元 </view>
         <view> {{item.coupon_name}} </view>
         <view> 满 {{item.min_use_amount}} 元使用 </view>
@@ -11,5 +26,9 @@
     <view class="bottom-box">
         <view class="add-btn" bindtap="goBuy">立即前往下单</view>
     </view>
-
+  </view>
+  <view class="no-order" hidden="{{(coupons ? false : true) || (coupons.length != 0)}}">
+        <image src="/images/no-order.png" class="no-order-img"></image>
+        <view class="text">暂无数据</view>
+    </view>
 </view>

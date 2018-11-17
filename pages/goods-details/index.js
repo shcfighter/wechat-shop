@@ -27,9 +27,8 @@ Page({
 
   //事件处理函数
   swiperchange: function(e) {
-      //console.log(e.detail.current)
-       this.setData({  
-        swiperCurrent: e.detail.current  
+    this.setData({  
+      swiperCurrent: e.detail.current  
     })  
   },
   onLoad: function (e) {
@@ -44,12 +43,8 @@ Page({
     wx.getStorage({
       key: 'shopCarInfo',
       success: function(res) {
-        if (null == res.data.shopNum){
-          res.data.shopNum = 0;
-        }
         that.setData({
-          shopCarInfo:res.data,
-          shopNum:res.data.shopNum
+          shopCarInfo:res.data
         });
       } 
     })
@@ -88,11 +83,32 @@ Page({
         WxParse.wxParse('article', 'html', res.data.items.content, that, 5);
       }
     })
+    this.cartNum();
     this.isCollect(e.id);
     this.reputation(e.id);
     
   },
-  isCollect(id){
+  cartNum: function(){
+    var that = this;
+    wx.request({
+      url: app.globalData.domain + 'api/cart/num',
+      data: {},
+      method: "GET",
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if (res.data.status == 0) {
+          that.data.shopNum = res.data.items;
+          that.setData({
+            shopNum: res.data.items
+          });
+        }
+      }
+    });
+  },
+  isCollect: function(id){
     var that = this;
     //判断是否收藏
     wx.request({
@@ -326,7 +342,7 @@ Page({
         commodity_name: this.data.goodsDetail.basicInfo.commodity_name,
         specifition_name: this.data.specifition_name,
         price: this.data.selectSizePrice,
-        freight_price: this.data.goodsDetail.basicInfo.freight + ""
+        freight_price: this.data.goodsDetail.basicInfo.freight_price + ""
       },
       header: {
         'content-type': 'application/json', // 默认值

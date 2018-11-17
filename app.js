@@ -7,7 +7,6 @@ App({
     //wx.removeStorageSync('token')
     console.log("token: " + token)
     if (!token) {
-      console.log("1  goLoginPageTimeOut");
       that.goLoginPageTimeOut()
       return
     }
@@ -21,7 +20,6 @@ App({
       success: function (res) {
         if (res.data.status != 0) {
           wx.removeStorageSync('token')
-          console.log("2  goLoginPageTimeOut");
           that.goLoginPageTimeOut()
         }
       }
@@ -76,7 +74,6 @@ App({
     })
   },  
   goLoginPageTimeOut: function () {
-    console.log("3  goLoginPageTimeOut");
     setTimeout(function(){
       wx.navigateTo({
         url: "/pages/authorize/index"

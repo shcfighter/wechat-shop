@@ -8,6 +8,7 @@
     "pages/select-address/index",
     "pages/address-add/index",
     "pages/order-list/index",
+    "pages/collect-browse/index",
     "pages/order-details/index",
     "pages/wuliu/index",
     "pages/mycoupons/index",

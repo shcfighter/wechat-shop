@@ -5,10 +5,13 @@ Page({
     balance:0,
     freeze:0,
     score:0,
-    score_sign_continuous:0
+    score_sign_continuous:0,
+    browseNum: 0,
+    collectNum: 0,
+    cartNum: 0,
+    couponNum: 0
   },
 	onLoad() {
-    
 	},	
   onShow() {
     let that = this;
@@ -26,11 +29,95 @@ Page({
     this.getUserApiInfo();
     this.getUserAmount();
     this.checkScoreSign();
+    this.getBrowseNum(); 
+    this.getCollectNum();
+    this.getCartNum();
+    this.getCouponNum();
+  },
+  getCouponNum: function () {
+    var that = this;
+    wx.request({
+      url: app.globalData.domain + 'api/coupon/num',
+      method: 'GET',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if (res.data.status == 0) {
+          that.data.couponNum = res.data.items;
+          that.setData({
+            couponNum: res.data.items
+          });
+        }
+      }
+    });
+  },
+  getCartNum: function () {
+    var that = this;
+    wx.request({
+      url: app.globalData.domain + 'api/cart/num',
+      method: 'GET',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if (res.data.status == 0) {
+          that.data.cartNum = res.data.items;
+          that.setData({
+            cartNum: res.data.items
+          });
+        }
+      }
+    });
+  },
+  getBrowseNum: function(){
+    var that = this;
+    wx.request({
+      url: app.globalData.domain + 'api/browse/num',
+      method: 'GET',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if(res.data.status == 0){
+          that.data.browseNum = res.data.items;
+          that.setData({
+            browseNum: res.data.items
+          });
+        }
+      }
+    });
+  },
+  getCollectNum: function () {
+    var that = this;
+    wx.request({
+      url: app.globalData.domain + 'api/collect/num',
+      method: 'GET',
+      data: {},
+      header: {
+        'content-type': 'application/json', // 默认值
+        'token': wx.getStorageSync('token')
+      },
+      success: function (res) {
+        if (res.data.status == 0) {
+          that.data.collectNum = res.data.items;
+          that.setData({
+            collectNum: res.data.items
+          });
+        }
+      }
+    });
   },
   aboutUs : function () {
     wx.showModal({
       title: '关于我们',
-      content: '本系统基于开源小程序商城系统 https://github.com/EastWorld/wechat-app-mall 搭建，祝大家使用愉快！',
+      content: '本系统是微信小程序商城体验版，祝大家使用愉快！',
       showCancel:false
     })
   },

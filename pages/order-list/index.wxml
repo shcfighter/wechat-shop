@@ -34,7 +34,7 @@
                             <view class="goods-price">¥ {{commodity.price}}</view>
                         </view>
                         <view class="arow">
-                            <view class="goods-label">{{item.num}}</view>
+                            <view class="goods-label">{{item.specifition_name}}</view>
                             <view class="goods-num">x {{item.num}}</view>
                         </view>
                     </view>

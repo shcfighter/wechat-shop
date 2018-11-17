@@ -28,20 +28,20 @@
 
   <view class="a-section a-topic">
     <view class="m-menu">
-      <navigator class="item" url="/pages/order-list/index?type=1">
-        <text style="padding-bottom: 10px;">1</text>
+      <navigator class="item" url="/pages/collect-browse/index?type=1">
+        <text style="padding-bottom: 10px;">{{browseNum}}</text>
         <text>浏览记录</text>
       </navigator>
-      <navigator class="item" url="/pages/order-list/index?type=2">
-        <text style="padding-bottom: 10px;">14</text>
+      <navigator class="item" url="/pages/collect-browse/index?type=0">
+        <text style="padding-bottom: 10px;">{{collectNum}}</text>
         <text>我的收藏</text>
       </navigator>
-      <navigator class="item" url="/pages/order-list/index?type=3">
-        <text style="padding-bottom: 10px;">20</text>
+      <navigator class="item" url="/pages/shop-cart/index">
+        <text style="padding-bottom: 10px;">{{cartNum}}</text>
         <text>购物车</text>
       </navigator>
       <navigator class="item" url="/pages/mycoupons/index">
-        <text style="padding-bottom: 10px;">1</text>
+        <text style="padding-bottom: 10px;">{{couponNum}}</text>
         <text>优惠券</text>
       </navigator>
     </view>
