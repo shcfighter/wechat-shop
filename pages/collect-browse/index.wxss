@@ -10,6 +10,8 @@
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
+    position:fixed; 
+    top:0;
 }
 .status-box .status-label{
     width: 50%;
@@ -54,26 +56,14 @@
     color:#999999;
     text-align: center
 }
-.order-list{
+.goods-list{
     width: 100%;
 }
-.order-list .a-order{
+.goods-list .a-order{
     width: 100%;
     background-color: #fff;
-    margin-top: 20rpx;
-}
-.order-list .a-order .order-date{
-    padding: 0 30rpx;
-    height: 88rpx;
-    display: flex;
-    justify-content: space-between;
-    font-size:26rpx;
-    color:#000000;
-    align-items: center;
-}
-.order-list .a-order .order-date .red{
-    font-size:26rpx;
-    color:#e64340;
+    margin-top: 0rpx;
+    border-top: 1px solid #eee;
 }
 .a-order  .goods-info, .goods-img-container{
     width: 720rpx;
@@ -153,12 +143,12 @@
     color: #e64340;
 }
 
-
 .goods-list{
     width:100%;
     background-color: #fff;
     margin-bottom: 20rpx;
-    margin-top: 20rpx;
+    margin-top: 90rpx;
+    border-top: 1px solid #eee;
 }
 .goods-list .list-title{
     font-size: 28rpx;
@@ -170,7 +160,7 @@
     margin-left: 30rpx;
     display: flex;
     /*justify-content: space-between;*/
-    border-top: 1px solid #eee;
+    /* border-top: 1px solid #eee; */
     padding: 30rpx 30rpx 30rpx 0;
 }
 .goods-list  .a-goods .img-box{

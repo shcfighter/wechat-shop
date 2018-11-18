@@ -81,12 +81,12 @@ App({
     }, 1000)
   },
   globalData:{
-    domain: "http://localhost:8080/",
-    //domain: "http://111.231.132.168/",
+    //domain: "http://localhost:8080/",
+    domain: "http://111.231.132.168/",
     userInfo:null,
-    mallName: "天使童装",
+    mallName: "杂货店",
     subDomain: "tz", // 如果你的域名是： https://api.it120.cc/abcd 那么这里只要填写 abcd
-    version: "4.0.0",
+    version: "1.0.0",
     shareProfile: '百款精品商品，总有一款适合您', // 首页转发的时候话术
     order_reputation_score: '好评送',
     recharge_amount_min: 0.01   //充值最少金额

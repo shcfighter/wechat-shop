@@ -119,7 +119,7 @@ swiper-item image {
   font-size: 28rpx;
   line-height: 102rpx;
   margin-bottom: 28rpx;
-  background: #fff url(https://cdn.it120.cc/images/weappshop/arrow-right.png) no-repeat 697rpx center;
+  background: #fff url(http://111.231.132.168:8080/images_miniprogram/wechat/arrow-right.png) no-repeat 697rpx center;
   background-size: 18rpx auto;
 }
 .goods-des-info{
@@ -168,7 +168,7 @@ swiper-item image {
   font-size: 20rpx;
   color: #008000;
   box-sizing: border-box;
-  background: url("https://cdn.it120.cc/images/weappshop/kefu.png") no-repeat center 21rpx;
+  background: url("http://111.231.132.168:8080/images_miniprogram/wechat/kefu.png") no-repeat center 21rpx;
   background-size: 55rpx auto;
 }
 .footer-box .shop-cart-btn {
@@ -182,7 +182,7 @@ swiper-item image {
   font-size: 20rpx;
   color: #acacb7;
   box-sizing: border-box;
-  background: url("https://cdn.it120.cc/images/weappshop/cart.png") no-repeat center 21rpx; 
+  background: url("http://111.231.132.168:8080/images_miniprogram/wechat/cart.png") no-repeat center 21rpx; 
   background-size: 44rpx auto;
 }
 .footer-box .shop-cart-btn .shop-num{
@@ -278,7 +278,7 @@ swiper-item image {
   width: 36rpx;
   height: 36rpx;
   flex: 1;
-  background:url("https://cdn.it120.cc/images/weappshop/popup-close.png") no-repeat center center;
+  background:url("http://111.231.132.168:8080/images_miniprogram/wechat/popup-close.png") no-repeat center center;
   background-size: 36rpx auto;
   align-self: flex-start;
   margin-top: -10rpx;

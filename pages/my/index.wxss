@@ -36,7 +36,7 @@
 
 .my-item{
     width: 100%;
-    background: url(https://cdn.it120.cc/images/weappshop/arrow-right.png) no-repeat 750rpx center;
+    background: url(http://111.231.132.168:8080/images_miniprogram/wechat/arrow-right.png) no-repeat 750rpx center;
     background-size: 16rpx auto,750rpx auto;
     margin: 20rpx 0; 
     border-bottom: 1px solid #eee;
@@ -47,7 +47,7 @@
 
 .about{
     width: 100%;
-    background: url(https://cdn.it120.cc/images/weappshop/arrow-right.png) no-repeat 750rpx center;
+    background: url(http://111.231.132.168:8080/images_miniprogram/wechat/arrow-right.png) no-repeat 750rpx center;
     background-size: 16rpx auto,750rpx auto;
     margin: 20rpx 0; 
     height: 80rpx;

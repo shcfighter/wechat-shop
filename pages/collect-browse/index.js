@@ -76,7 +76,7 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.data.status == 0) {
-          if(res.data.items.length == 0){
+          if (res.data.items.length == 0 && append){
             that.setData({
               loadingMoreHidden: false
             });

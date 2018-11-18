@@ -10,6 +10,8 @@
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
+    position:fixed; 
+    top:0;
 }
 .status-box .status-label{
     width: 150rpx;
@@ -56,6 +58,7 @@
 }
 .order-list{
     width: 100%;
+    margin-top: 90rpx;
 }
 .order-list .a-order{
     width: 100%;
