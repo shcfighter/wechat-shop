@@ -94,7 +94,6 @@ Page({
       })
       return;
     }
-    console.log(userInfo)
     wx.login({
       success: function(res) {
         wx.request({

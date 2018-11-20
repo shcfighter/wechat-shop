@@ -26,7 +26,6 @@ Page({
       if (buyNowInfoMem && buyNowInfoMem.shopList) {
         shopList = buyNowInfoMem.shopList
       }
-      console.log(shopList)
       var entity = shopList[0];
       that.data.allGoodsPrice += parseInt(entity.price) * parseInt(entity.num);
       if (parseInt(entity.freight_price) > that.data.yunPrice) {

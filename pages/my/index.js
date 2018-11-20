@@ -215,12 +215,7 @@ Page({
           });
           return;
         }
-		if (res.data.items == -1) {
-          // wx.showModal({
-          //   title: '错误',
-          //   content: "当天已签到",
-          //   showCancel: false
-          // });
+		    if (res.data.items == -1) {
           wx.showToast({
             title: '当天已签到',
             icon: 'none',
